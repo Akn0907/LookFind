@@ -149,11 +149,14 @@ async def analyze(image: UploadFile=File(...)):
         raise HTTPException(422,'Bu fotoğrafta desteklenen kıyafet parçası tespit edilemedi. Kişinin ve kıyafetlerin net göründüğü başka bir fotoğraf deneyin.')
     groups=[]
     for d in detections:
+          groups=[]
+    for d in detections:
         crop=img.crop(tuple(d['box']))
-        try: products=lens_search(crop,serp,8)
-       except Exception as exc:
-    print(f"SERPAPI HATASI: {type(exc).__name__}: {exc}", flush=True)
-    products=[]
+        try:
+            products=lens_search(crop,serp,8)
+        except Exception as exc:
+            print(f"SERPAPI HATASI: {type(exc).__name__}: {exc}", flush=True)
+            products=[]
         groups.append({'category':d['category'],'confidence':round(d['confidence']*100),'box':d['box'],'products':products})
     def valid_price(p):
         v=p.get('price_value')
