@@ -151,7 +151,9 @@ async def analyze(image: UploadFile=File(...)):
     for d in detections:
         crop=img.crop(tuple(d['box']))
         try: products=lens_search(crop,serp,8)
-        except Exception as exc: products=[]
+       except Exception as exc:
+    print(f"SERPAPI HATASI: {type(exc).__name__}: {exc}", flush=True)
+    products=[]
         groups.append({'category':d['category'],'confidence':round(d['confidence']*100),'box':d['box'],'products':products})
     def valid_price(p):
         v=p.get('price_value')
